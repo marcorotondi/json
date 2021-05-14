@@ -1,19 +1,19 @@
-package com.marco;
+package com.marco.json.serializer.model.response;
 
-public class Response {
+public class Response<T> {
 
-    private Inner inner;
+    private Inner<T> inner;
 
     private ResponseCode responseCode;
 
     public Response() {
     }
 
-    public Inner getInner() {
+    public Inner<T> getInner() {
         return inner;
     }
 
-    public void setInner(Inner inner) {
+    public void setInner(Inner<T> inner) {
         this.inner = inner;
     }
 

@@ -1,4 +1,4 @@
-package com.marco;
+package com.marco.json.serializer.model.response;
 
 public class Inner<T> {
 

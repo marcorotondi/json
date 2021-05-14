@@ -1,4 +1,4 @@
-package com.marco;
+package com.marco.json.model;
 
 public class InnerType {
 

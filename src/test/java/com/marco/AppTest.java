@@ -1,14 +1,16 @@
 package com.marco;
 
-import static org.junit.Assert.assertTrue;
-
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
+import com.marco.json.model.InnerType;
+import com.marco.json.serializer.CustomResponseSerializer;
+import com.marco.json.serializer.model.response.Inner;
+import com.marco.json.serializer.model.response.Response;
+import com.marco.json.serializer.model.response.ResponseCode;
 import org.junit.Test;
 
 import java.io.IOException;
-import java.io.StringWriter;
 
 /**
  * Unit test for simple App.
@@ -74,7 +76,7 @@ public class AppTest
         inner.setDescription("this is a description");
         inner.setContent(new InnerType("field 1", 2000));
 
-        var response = new Response();
+        var response = new Response<InnerType>();
         response.setResponseCode(ResponseCode.INTERNAL_ERROR);
         response.setInner(inner);
 

@@ -1,4 +1,4 @@
-package com.marco;
+package com.marco.json.serializer.model.response;
 
 public enum ResponseCode {
     INTERNAL_ERROR("500"),
