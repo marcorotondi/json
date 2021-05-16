@@ -3,14 +3,17 @@ package com.marco;
 import com.fasterxml.jackson.core.Version;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.module.SimpleModule;
-import com.marco.json.model.InnerType;
+import com.marco.json.model.Error;
+import com.marco.json.model.Result;
+import com.marco.json.other.OtherBean;
 import com.marco.json.serializer.CustomResponseSerializer;
-import com.marco.json.serializer.model.response.Inner;
-import com.marco.json.serializer.model.response.Response;
-import com.marco.json.serializer.model.response.ResponseCode;
+import com.marco.json.serializer.model.Response;
+import org.junit.Assert;
 import org.junit.Test;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.util.UUID;
 
 /**
  * Unit test for simple App.
@@ -66,30 +69,25 @@ public class AppTest
             """;
     @Test
     public void shouldAnswerWithTrue() throws IOException {
-        ObjectMapper mapper = new ObjectMapper();
+        var mapper = new ObjectMapper();
         SimpleModule module =
                 new SimpleModule("CustomResponseSerializer", new Version(1, 0, 0, null, null, null));
         module.addSerializer(Response.class, new CustomResponseSerializer());
         mapper.registerModule(module);
 
-        var inner = new Inner<InnerType>();
-        inner.setDescription("this is a description");
-        inner.setContent(new InnerType("field 1", 2000));
+        var errorResponse = new Response<>(500, new Error("Internal Server Error",
+                new OtherBean(UUID.randomUUID().toString(), LocalDate.now())));
 
-        var response = new Response<InnerType>();
-        response.setResponseCode(ResponseCode.INTERNAL_ERROR);
-        response.setInner(inner);
-
-        String responseJson = mapper.writeValueAsString(response);
+        String responseJson = mapper.writeValueAsString(errorResponse);
         System.out.println(responseJson);
+        Assert.assertTrue(responseJson.contains("\"500\""));
+        Assert.assertTrue(responseJson.contains("\"description\":\"Internal Server Error\""));
 
-        response.setResponseCode(ResponseCode.BAD_REQUEST);
-        responseJson = mapper.writeValueAsString(response);
+        var okResponse = new Response<>(200, new Result("Created",
+                new OtherBean(UUID.randomUUID().toString(), LocalDate.now())));
+        responseJson = mapper.writeValueAsString(okResponse);
         System.out.println(responseJson);
-
-
-        response.setResponseCode(ResponseCode.OK);
-        responseJson = mapper.writeValueAsString(response);
-        System.out.println(responseJson);
+        Assert.assertTrue(responseJson.contains("\"200\""));
+        Assert.assertTrue(responseJson.contains("\"description\":\"Created\""));
     }
 }
